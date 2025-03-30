@@ -19,5 +19,5 @@ public interface EventAttendeeRepository {
         DELETE FROM event_attendee
         WHERE event_id = #{eventId}
     """)
-    void deleteStudentCourse(Integer eventId);
+    void deleteEventAttendee(Integer eventId);
 }

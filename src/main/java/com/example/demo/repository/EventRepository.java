@@ -47,10 +47,23 @@ public interface EventRepository {
 
 
     @Select("""
+        UPDATE events
+        SET event_name = #{event.eventName},
+            event_date = #{event.eventDate},
+            venue_id = #{event.venueId}
+        WHERE event_id = #{eventId}
+        RETURNING *
+    """)
+    @ResultMap("eventMapper")
+    Event updateEvent(Integer eventId, @Param("event") EventRequest eventRequest);
+
+
+    @Select("""
         DELETE FROM events
         WHERE event_id = #{eventId}
         RETURNING event_id
     """)
     @ResultMap("eventMapper")
     Event deleteEventById(Integer eventId);
+
 }
