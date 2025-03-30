@@ -6,7 +6,6 @@ import com.example.demo.model.entity.Attendee;
 import com.example.demo.service.AttendeeService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +21,8 @@ public class AttendeeController {
 
     @GetMapping
     ResponseEntity<ApiResponse<List<Attendee>>> getAllAttendees(
-            @RequestParam(defaultValue = "1") @Positive @Min(value = 1, message = "Offset must be greater than 0") Integer offset,
-            @RequestParam(defaultValue = "10") @Positive @Min(value = 1, message = "Limit must be greater than 0") Integer limit
+            @RequestParam(defaultValue = "1") @Min(value = 1, message = "Offset must be greater than 0") Integer offset,
+            @RequestParam(defaultValue = "10") @Min(value = 1, message = "Limit must be greater than 0") Integer limit
     ) {
 
         List<Attendee> attendees = attendeeService.getAllAttendees(offset, limit);

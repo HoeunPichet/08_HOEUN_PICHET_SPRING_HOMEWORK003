@@ -7,9 +7,9 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 public interface EventService {
-    List<Event> getAllEvents(Long offset, Long limit);
-    Event findEventById(Long id);
+    List<Event> getAllEvents(Integer offset, Integer limit);
+    Event findEventById(Integer eventId);
     Event insertEvent(@Valid EventRequest eventRequest);
-    Event updateEvent(Long eventId, @Valid EventRequest eventRequest);
-    Event deleteEventById(Long id);
+    Event updateEvent(Integer eventId, @Valid EventRequest eventRequest);
+    Event deleteEventById(Integer eventId);
 }

@@ -17,8 +17,8 @@ public interface AttendeeRepository {
         OFFSET #{limit} * (#{offset} - 1) LIMIT #{limit}
     """)
     @Results(id = "attendeeMapper", value = {
-            @Result(property = "attendeeId", column = "attendee_id"),
-            @Result(property = "attendeeName", column = "attendee_name")
+        @Result(property = "attendeeId", column = "attendee_id"),
+        @Result(property = "attendeeName", column = "attendee_name")
     })
     List<Attendee> getAllAttendees(Integer offset, Integer limit);
 
@@ -29,6 +29,16 @@ public interface AttendeeRepository {
     """)
     @ResultMap("attendeeMapper")
     Attendee findAttendeeById(Integer attendeeId);
+
+
+    @Select("""
+        SELECT a.* FROM event_attendee ea
+        LEFT JOIN attendees a ON ea.attendee_id = a.attendee_id
+        WHERE event_id = #{eventId}
+        ORDER BY a.attendee_id
+    """)
+    @ResultMap("attendeeMapper")
+    List<Attendee> findAttendeesByEventId(Integer eventId);
 
 
     @Select("""

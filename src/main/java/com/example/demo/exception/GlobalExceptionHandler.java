@@ -26,25 +26,23 @@ public class GlobalExceptionHandler {
         return detail;
     }
 
-    @ExceptionHandler(AleadyExistingException.class)
-    public ProblemDetail handleExistingDataException(AleadyExistingException e) {
-        ProblemDetail detail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
-        detail.setDetail(e.getMessage());
+    @ExceptionHandler({AleadyExistingException.class, MethodArgumentNotValidException.class})
+    public ProblemDetail handleExceptions(Exception e) {
+        Map<String, String> errors = new HashMap<>();
+        ProblemDetail detail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         detail.setProperty("timestamp", LocalDateTime.now());
 
-        return detail;
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ProblemDetail handleMethodArgument(MethodArgumentNotValidException e) {
-        Map<String , String > errors = new HashMap<>();
-        for(FieldError fieldError : e.getBindingResult().getFieldErrors()) {
-            errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+        if (e instanceof AleadyExistingException ae) {
+            errors.put(ae.getField(), ae.getMessage());
         }
 
-        ProblemDetail detail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        if (e instanceof MethodArgumentNotValidException ex) {
+            for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+        }
+
         detail.setDetail("BAD REQUEST");
-        detail.setProperty("timestamp", LocalDateTime.now());
         detail.setProperty("errors", errors);
 
         return detail;

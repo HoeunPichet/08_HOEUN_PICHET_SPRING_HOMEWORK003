@@ -7,6 +7,7 @@ import lombok.Data;
 public class VenueRequest {
     @NotBlank(message = "Venue Name cannot be blank")
     private String venueName;
+
     @NotBlank(message = "Location cannot be blank")
     private String location;
 }

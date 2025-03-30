@@ -5,6 +5,7 @@ import com.example.demo.model.dto.response.ApiResponse;
 import com.example.demo.model.entity.Event;
 import com.example.demo.service.EventService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,16 +13,19 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@RestController
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/events")
 public class EventController {
     private final EventService eventService;
 
     @GetMapping
-    ResponseEntity<ApiResponse<List<Event>>> getAllEvents(@RequestParam(required = false, defaultValue = "1") Long offset, @RequestParam(required = false, defaultValue = "10") Long limit) {
-        List<Event> events = eventService.getAllEvents(offset, limit);
+    ResponseEntity<ApiResponse<List<Event>>> getAllEvents(
+            @RequestParam(defaultValue = "1") @Min(value = 1, message = "Offset must be greater than 0") Integer offset,
+            @RequestParam(defaultValue = "10") @Min(value = 1, message = "Limit must be greater than 0") Integer limit
+    ) {
 
+        List<Event> events = eventService.getAllEvents(offset, limit);
         ApiResponse<List<Event>> response = ApiResponse.<List<Event>>builder()
                 .message("Get all events successfully!")
                 .payload(events)
@@ -32,7 +36,7 @@ public class EventController {
     }
 
     @GetMapping("/{event-id}")
-    ResponseEntity<ApiResponse<Event>> findEventById(@PathVariable("event-id") Long eventId) {
+    ResponseEntity<ApiResponse<Event>> findEventById(@PathVariable("event-id") Integer eventId) {
         Event event = eventService.findEventById(eventId);
         ApiResponse<Event> response = ApiResponse.<Event>builder()
                 .message("Event has been found successfully!")
@@ -55,7 +59,7 @@ public class EventController {
     }
 
     @PutMapping("/{event-id}")
-    ResponseEntity<ApiResponse<Event>> updateEvent(@PathVariable("event-id") Long eventId, @RequestBody @Valid EventRequest eventRequest) {
+    ResponseEntity<ApiResponse<Event>> updateEvent(@PathVariable("event-id") Integer eventId, @RequestBody @Valid EventRequest eventRequest) {
         Event event = eventService.updateEvent(eventId, eventRequest);
         ApiResponse<Event> response = ApiResponse.<Event>builder()
                 .message("Event has been updated successfully!")
@@ -66,7 +70,7 @@ public class EventController {
     }
 
     @DeleteMapping("/{event-id}")
-    ResponseEntity<ApiResponse<Event>> deleteEventById(@PathVariable("event-id") Long eventId) {
+    ResponseEntity<ApiResponse<Event>> deleteEventById(@PathVariable("event-id") Integer eventId) {
         Event event = eventService.deleteEventById(eventId);
         ApiResponse<Event> response = ApiResponse.<Event>builder()
                 .message("Event ID " + eventId + " has been deleted successfully!")

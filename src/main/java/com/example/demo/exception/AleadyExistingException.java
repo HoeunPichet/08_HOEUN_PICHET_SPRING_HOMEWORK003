@@ -1,7 +1,11 @@
 package com.example.demo.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
 public class AleadyExistingException extends RuntimeException {
-    public AleadyExistingException(String message) {
-        super(message);
-    }
+    private String field;
+    private String message;
 }

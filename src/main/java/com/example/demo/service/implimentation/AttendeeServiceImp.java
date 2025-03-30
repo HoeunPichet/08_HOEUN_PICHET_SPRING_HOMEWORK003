@@ -35,7 +35,7 @@ public class AttendeeServiceImp implements AttendeeService {
     public Attendee insertAttendee(AttendeeRequest attendeeRequest) {
         Attendee email = attendeeRepository.checkedExistingEmail(attendeeRequest.getEmail());
         if (email != null) {
-            throw new AleadyExistingException("Email has been taken!");
+            throw new AleadyExistingException("email", "Email has been taken!");
         }
 
         return attendeeRepository.insertAttendee(attendeeRequest);
@@ -51,7 +51,7 @@ public class AttendeeServiceImp implements AttendeeService {
 
         Attendee email = attendeeRepository.checkedExistingEmail(attendeeRequest.getEmail());
         if (email != null && !existingData.getEmail().equals(email.getEmail())) {
-            throw new AleadyExistingException("Email has been taken!");
+            throw new AleadyExistingException("email", "Email has been taken!");
         }
 
         return attendeeRepository.updateAttendee(attendeeId, attendeeRequest);
